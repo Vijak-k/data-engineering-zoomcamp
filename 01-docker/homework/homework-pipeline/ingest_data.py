@@ -19,8 +19,8 @@ dtype = {
     "tolls_amount": "float64",
     "improvement_surcharge": "float64",
     "total_amount": "float64",
-    "congestion_surcharge": "float64"
-    "airport_fee": "float64"
+    "congestion_surcharge": "float64",
+    "airport_fee": "float64",
     "cbd_congestion_fee": "float64"
 }
 
