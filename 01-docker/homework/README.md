@@ -1,5 +1,5 @@
 # Homework 1: Docker, SQL and Terraform for Data Engineering Zoomcamp 2026
-This directory reccord my codes and answers of homework 1.
+This directory records my codes and answers of homework 1.
 
 The source data is green taxi data (see [Referemce](#reference)) \
 The ingestion pipeline can be found in the [homework-pipeline](https://github.com/Vijak-k/data-engineering-zoomcamp/tree/94df651a59f856c53142bec5f738e1b508ce2ef7/01-docker/homework/homework-pipeline) folder.
