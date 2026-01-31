@@ -1,0 +1,13 @@
+id: vijak_each_test
+namespace: zoomcamp
+description: |
+  Nested loop for countinng from 1 to 12
+
+tasks:
+  - id: start_loop
+    type: io.kestra.plugin.core.flow.ForEach
+    values: '[1,2,3,4,5,6,7,8,9,10,11,12]'
+    tasks:
+      - id: counting
+        type: io.kestra.plugin.core.debug.Return
+        format: "We are at {{taskrun.value}}"
