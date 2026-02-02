@@ -17,16 +17,19 @@ Then, we can execute the flow for the yellow taxi data of December, 2020 and see
 Run the same flow with the first question; but, replace the `taxt`, `year`, and `month` accordingly.
 
 ## **Question 3.** How many rows are there for the `Yellow` Taxi data for all CSV files in the year 2020?
+💡Answer: 24,648,499
 
+Add the foreach task to the taxi-gcp workflow.
 
 
 ## **Question 4.** How many rows are there for the `Green` Taxi data for all CSV files in the year 2020?
-
+💡Answer: 1,734,051
 
 
 ## **Question 5.** How many rows are there for the `Yellow` Taxi data for the March 2021 CSV file?
-
+💡Answer: 1,925,152
+Similar to the first questions, I download the csv file and check the number of rows (though I got 1,925,154)
 
 
 ## **Question 6.** How would you configure the timezone to New York in a Schedule trigger?
-
+💡Answer: Add a timezone property set to America/New_York in the Schedule trigger configuration (Ref: https://kestra.io/plugins/core/trigger/io.kestra.plugin.core.trigger.schedule#examples-body)
