@@ -19,17 +19,44 @@ Run the same flow with the first question; but, replace the `taxt`, `year`, and 
 ## **Question 3.** How many rows are there for the `Yellow` Taxi data for all CSV files in the year 2020?
 💡Answer: 24,648,499
 
-Add the foreach task to the taxi-gcp workflow.
+Add forEach task to the gcp-taxi work flow (See flow-homeowkr-yaml).
+Then quey for the number of rows
+```
+WITH yellow_taxi AS (
+    SELECT 
+        filename, 
+        COUNT(*) as record_count
+    FROM `terraform-demo-484107.zoomcamp.yellow_tripdata`
+    WHERE filename LIKE 'yellow_tripdata_2020%'
+    GROUP BY filename
+    ORDER BY filename)
 
+SELECT
+    SUM(record_count)
+FROM yellow_taxi;
+```
 
 ## **Question 4.** How many rows are there for the `Green` Taxi data for all CSV files in the year 2020?
 💡Answer: 1,734,051
+Similar to the third question but replacing `yellow` with `green`
+```
+WITH green_taxi AS (
+    SELECT 
+        filename, 
+        COUNT(*) as record_count
+    FROM `terraform-demo-484107.zoomcamp.green_tripdata`
+    WHERE filename LIKE 'green_tripdata_2020%'
+    GROUP BY filename
+    ORDER BY filename)
 
+SELECT
+    SUM(record_count)
+FROM green_taxi;
+```
 
 ## **Question 5.** How many rows are there for the `Yellow` Taxi data for the March 2021 CSV file?
 💡Answer: 1,925,152
 Similar to the first questions, I download the csv file and check the number of rows (though I got 1,925,154)
-
 
 ## **Question 6.** How would you configure the timezone to New York in a Schedule trigger?
 💡Answer: Add a timezone property set to America/New_York in the Schedule trigger configuration (Ref: https://kestra.io/plugins/core/trigger/io.kestra.plugin.core.trigger.schedule#examples-body)
