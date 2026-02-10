@@ -1,6 +1,6 @@
 # Homework 3: Workflow Orchestrator for Data Engineering Zoomcamp 2026
 This directory records my codes and answers of homework 3.
-Load data into Google Cloud Storage (GCP) bucket
+Load data into Google Cloud Storage (GCP) bucket using python script
 ```
 uv run load_yellow_taxi_data.py
 ```
@@ -39,7 +39,7 @@ CREATE OR REPLACE TABLE `de-zoomcamp-487008.de_zoomcamp.yellow_tripdata_non_part
 SELECT * FROM `de-zoomcamp-487008.de_zoomcamp.de-zoomcamp-hw-03`;
 ```
 # Question 1. Counting Records
-What is count of records for the 2024 Yellow Taxi Data?
+What is count of records for the 2024 Yellow Taxi Data?<br>
 💡Ans: 20,332,093
 SQL for the answer
 ```
@@ -47,7 +47,7 @@ SELECT count(*) FROM `de-zoomcamp-487008.de_zoomcamp.de-zoomcamp-hw-03`
 ```
 # Question 2. Data Estimation
 Write a query to count the distinct number of `PULocationID`s for the entire dataset on both the tables.
-What is the estimated amount of data that will be read when this query is executed on the External Table and the Table?
+What is the estimated amount of data that will be read when this query is executed on the External Table and the Table?<br>
 💡Ans: 0 MB for the External Table and 155.12 MB for the Materialized Table
 For the external table, this query will process 0 MB when run.
 ```
@@ -60,7 +60,7 @@ SELECT count(distinct `PULocationID`) FROM `de-zoomcamp-487008.de_zoomcamp.yello
 ```
 
 # Question 3. Understanding columnar storage
-Write a query to retrieve the `PULocationID` from the table (not the external table) in BigQuery. Now write a query to retrieve the `PULocationID` and `DOLocationID` on the same table.
+Write a query to retrieve the `PULocationID` from the table (not the external table) in BigQuery. Now write a query to retrieve the `PULocationID` and `DOLocationID` on the same table.<br>
 💡Ans: BigQuery is a columnar database, and it only scans the specific columns requested in the query. Querying two columns (PULocationID, DOLocationID) requires reading more data than querying one column (PULocationID), leading to a higher estimated number of bytes processed.
 Retrieve only `PULocationID`
 ```
@@ -75,14 +75,14 @@ SELECT PULocationID, DOLocationID FROM `de-zoomcamp-487008.de_zoomcamp.yellow_tr
 This query will process 310.24 MB when run.
 
 # Question 4. Counting zero fare trips
-How many records have a `fare_amount` of 0?
+How many records have a `fare_amount` of 0?<br>
 💡Ans: 8,333
 ```
 SELECT count(*) FROM `de-zoomcamp-487008.de_zoomcamp.de-zoomcamp-hw-03` WHERE fare_amount = 0;
 ```
 
 # Question 5. Partitioning and clustering
- What is the best strategy to make an optimized table in Big Query if your query will always filter based on `tpep_dropoff_datetime` and order the results by `VendorID` (Create a new table with this strategy)
+ What is the best strategy to make an optimized table in Big Query if your query will always filter based on `tpep_dropoff_datetime` and order the results by `VendorID` (Create a new table with this strategy)<br>
 💡Ans: Partitioning and clustering
 To create the table
 ```
@@ -93,7 +93,7 @@ SELECT * FROM `de-zoomcamp-487008.de_zoomcamp.de-zoomcamp-hw-03`;
 ```
 
 # Question 6. Partition benefits
-Write a query to retrieve the distinct `VendorID`s between `tpep_dropoff_datetime` 2024-03-01 and 2024-03-15 (inclusive). Use the materialized table you created earlier in your from clause and note the estimated bytes. Now change the table in the from clause to the partitioned table you created for question 5 and note the estimated bytes processed. What are these values?
+Write a query to retrieve the distinct `VendorID`s between `tpep_dropoff_datetime` 2024-03-01 and 2024-03-15 (inclusive). Use the materialized table you created earlier in your from clause and note the estimated bytes. Now change the table in the from clause to the partitioned table you created for question 5 and note the estimated bytes processed. What are these values?<br>
 💡Ans: 310.24 MB for non-partitioned table and 26.84 MB for the partitioned table
 SQL for non-partitioned and non-clustered table
 ```
@@ -113,16 +113,16 @@ This query will process 26.84 MB when run.
 
 
 # Question 7. External table storage
-Where is the data stored in the External Table you created?
+Where is the data stored in the External Table you created?<br>
 💡Ans: GCP Bucket
 
 # Question 8. Clustering best practices
-It is best practice in Big Query to always cluster your data:
+It is best practice in Big Query to always cluster your data:<br>
 💡Ans: False 
 Small tables usually don't get benifit from clustering.
 
 # Question 9. Understanding table scans
-No Points: Write a SELECT count(*) query FROM the materialized table you created. How many bytes does it estimate will be read? Why?
+No Points: Write a SELECT count(*) query FROM the materialized table you created. How many bytes does it estimate will be read? Why?<br>
 💡Ans:
 ```
 SELECT COUNT(*) FROM `de-zoomcamp-487008.de_zoomcamp.yellow_tripdata_non_partitioned`
