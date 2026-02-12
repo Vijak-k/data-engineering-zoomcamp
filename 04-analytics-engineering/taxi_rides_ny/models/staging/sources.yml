@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw data for NYC taxi rides"
+    database: taxi_rides_ny # for BigQuery, use project_id
+    schema: prod # for BigQuery, use dataset name
+    tables:
+      - name: yellow_tripdata
+      - name: green_tripdata
+
