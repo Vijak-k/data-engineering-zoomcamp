@@ -260,3 +260,4 @@ __marimo__/
 
 # Data directory of dbt
 data/
+*.csv
