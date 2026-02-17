@@ -37,6 +37,7 @@ columns:
 Your model `fct_trips` has been running successfully for months. A new value `6` now appears in the source data.
 
 What happens when you run `dbt test --select fct_trips`?
+
 💡Answer: dbt will fail the test, returning a non-zero exit code
 
 
@@ -47,7 +48,9 @@ What happens when you run `dbt test --select fct_trips`?
 After running your dbt project, query the `fct_monthly_zone_revenue` model.
 
 What is the count of records in the `fct_monthly_zone_revenue` model?
+
 💡Answer: 12,184
+
 SQL code
 ```
 select count(*) from taxi_rides_ny.prod.fct_monthly_zone_revenue
@@ -60,6 +63,7 @@ select count(*) from taxi_rides_ny.prod.fct_monthly_zone_revenue
 Using the `fct_monthly_zone_revenue` table, find the pickup zone with the **highest total revenue** (`revenue_monthly_total_amount`) for **Green** taxi trips in 2020.
 
 Which zone had the highest revenue?
+
 💡Answer: East Harlem North
 
 SQL code
@@ -79,7 +83,9 @@ limit 1;
 ### Question 5. Green Taxi Trip Counts (October 2019)
 
 Using the `fct_monthly_zone_revenue` table, what is the **total number of trips** (`total_monthly_trips`) for Green taxis in October 2019?
+
 💡Answer: 384,624
+
 SQL code
 ```
 select
@@ -102,8 +108,33 @@ Create a staging model for the **For-Hire Vehicle (FHV)** trip data for 2019.
    - Rename fields to match your project's naming conventions (e.g., `PUlocationID` → `pickup_location_id`)
 
 What is the count of records in `stg_fhv_tripdata`?
-💡Answer: 
-- 42,084,899
-- 43,244,693
-- 22,998,722
-- 44,112,187
+
+💡Answer: 43,244,693
+
+We have to modify the ingestion script for fhv data.
+
+The SQL for `stg_fhv_tripdata`.
+
+```
+with source as (
+    select * from {{ source('raw_data', 'fhv_tripdata') }}
+),
+
+renamed as (
+    select
+        dispatching_base_num,
+        cast(pulocationid as integer) as pickup_location_id,
+        cast(dolocationid as integer) as dropoff_location_id,
+        cast(pickup_datetime as timestamp) as pickup_datetime,
+        cast(dropoff_datetime as timestamp) as dropoff_datetime,
+        cast(sr_flag as integer) as sr_flag,
+        affiliated_base_number
+
+    from source
+    where dispatching_base_num is not null
+)
+
+select * from renamed;
+```
+
+The can either run `SELECT COUNT(*) FROM taxi_rides_ny.prod.stg_fhv_tripdata` from Duckdb UI.
