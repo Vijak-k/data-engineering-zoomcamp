@@ -111,9 +111,9 @@ What is the count of records in `stg_fhv_tripdata`?
 
 💡Answer: 43,244,693
 
-We have to modify the ingestion script for fhv data.
+We have to modify the ingestion script for fhv data [here](https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/04-analytics-engineering/taxi_rides_ny/fhv_ingest.py).
 
-The SQL for `stg_fhv_tripdata`.
+The SQL for [`stg_fhv_tripdata`](https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/04-analytics-engineering/taxi_rides_ny/models/staging/stg_fhv_tripdata.sql).
 
 ```
 with source as (
@@ -137,4 +137,4 @@ renamed as (
 select * from renamed;
 ```
 
-The can either run `SELECT COUNT(*) FROM taxi_rides_ny.prod.stg_fhv_tripdata` from Duckdb UI.
+The can run `SELECT COUNT(*) FROM taxi_rides_ny.prod.stg_fhv_tripdata` inside Duckdb UI.
