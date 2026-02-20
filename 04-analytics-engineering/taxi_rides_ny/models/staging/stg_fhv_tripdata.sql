@@ -21,4 +21,4 @@ renamed as (
     where dispatching_base_num is not null
 )
 
-select * from renamed;
+select * from renamed
