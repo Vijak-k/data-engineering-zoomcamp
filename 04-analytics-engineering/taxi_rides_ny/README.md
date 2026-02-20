@@ -1,15 +1,26 @@
-Welcome to your new dbt project!
+### NYC Taxi Rides
 
-### Using the starter project
+This project transforms raw NYC Taxi and Limousine Commission (TLC) data into clean, analysis-ready models.
 
-Try running the following commands:
-- dbt run
-- dbt test
+#### Model Structure
+* **Staging (`models/staging/`):** Initial cleanup, renaming, and type casting of raw source data.
+* **Intermediate (`models/intermediate/`):** Complex logic, joining green/yellow datasets, and creating surrogate keys.
+* **Marts (`models/marts/`):** Business-level dimensions and fact tables used for BI and reporting.
 
-
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+```text
+models/
+├── staging/
+│   ├── schema.yml
+│   ├── stg_green_tripdata.sql
+│   ├── stg_yellow_tripdata.sql
+│   └── stg_fhv_tripdata.sql
+├── intermediate/
+│   ├── schema.yml
+│   ├── int_trips_unioned.sql
+│   └── int_trips.sql
+└── marts/
+    ├── schema.yml
+    ├── dim_vendors.sql
+    ├── dim_zones.sql
+    ├── fct_trips.sql
+    └── fct_monthly_zone_revenue.sql

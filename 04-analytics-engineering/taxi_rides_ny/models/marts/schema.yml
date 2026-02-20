@@ -1,0 +1,202 @@
+version: 2
+
+models:
+  - name: dim_vendors
+    description: "Dimension table for taxi vendors mapping IDs to their company names."
+    columns:
+      - name: vendor_id
+        data_type: integer
+        description: "Primary key. Unique identifier for the vendor (e.g., 1 or 2)."
+
+      - name: vendor_name
+        data_type: varchar
+        description: "The full name of the vendor (e.g., Creative Mobile Technologies or VeriFone)."
+
+  - name: dim_zones
+    description: "Dimension table for NYC taxi zones, boroughs, and service areas."
+    columns:
+      - name: location_id
+        data_type: integer
+        description: "Primary key. Unique identifier for the taxi zone."
+
+      - name: borough
+        data_type: varchar
+        description: "The name of the NYC borough where the zone is located (e.g., Manhattan, Brooklyn)."
+
+      - name: zone
+        data_type: varchar
+        description: "The specific neighborhood name of the taxi zone."
+
+      - name: service_zone
+        data_type: varchar
+        description: "The zone category (e.g., Yellow Zone, Boro Zone, Airports)."
+
+  - name: fct_monthly_zone_revenue
+    description: "Fact table aggregating revenue metrics by zone, month, and service type (Green/Yellow)."
+    columns:
+      - name: pickup_zone
+        data_type: varchar
+        description: "The neighborhood name where the trips originated."
+
+      - name: revenue_month
+        data_type: date
+        description: "The first day of the month for which revenue is aggregated."
+
+      - name: service_type
+        data_type: varchar
+        description: "The taxi type (Green or Yellow)."
+
+      - name: revenue_monthly_fare
+        data_type: decimal(38,3)
+        description: "Total sum of fare amounts for the month/zone/type."
+
+      - name: revenue_monthly_extra
+        data_type: decimal(38,3)
+        description: "Total sum of miscellaneous extras and surcharges."
+
+      - name: revenue_monthly_mta_tax
+        data_type: decimal(38,3)
+        description: "Total sum of MTA taxes collected."
+
+      - name: revenue_monthly_tip_amount
+        data_type: decimal(38,3)
+        description: "Total sum of tips (Credit Card only)."
+
+      - name: revenue_monthly_tolls_amount
+        data_type: decimal(38,3)
+        description: "Total sum of tolls paid."
+
+      - name: revenue_monthly_ehail_fee
+        data_type: decimal(38,3)
+        description: "Total sum of e-hail fees."
+
+      - name: revenue_monthly_improvement_surcharge
+        data_type: decimal(38,3)
+        description: "Total sum of improvement surcharges."
+
+      - name: revenue_monthly_total_amount
+        data_type: decimal(38,3)
+        description: "Grand total revenue (sum of all charges)."
+
+      - name: total_monthly_trips
+        data_type: bigint
+        description: "Count of all trips for this month/zone/type."
+
+      - name: avg_monthly_passenger_count
+        data_type: double
+        description: "Mean number of passengers per trip."
+
+      - name: avg_monthly_trip_distance
+        data_type: double
+        description: "Mean distance traveled per trip."
+
+  - name: fct_trips
+    description: "The primary fact table containing all enriched trip records joined with zone information."
+    columns:
+      - name: trip_id
+        data_type: varchar
+        description: "Surrogate key uniquely identifying each trip record."
+
+      - name: vendor_id
+        data_type: integer
+        description: "Reference to the dim_vendors table."
+
+      - name: service_type
+        data_type: varchar
+        description: "Source of the trip (Green or Yellow)."
+
+      - name: rate_code_id
+        data_type: integer
+        description: "Final rate code applied to the trip."
+
+      - name: pickup_location_id
+        data_type: integer
+        description: "ID for the pickup location."
+
+      - name: pickup_borough
+        data_type: varchar
+        description: "Borough name where the trip started."
+
+      - name: pickup_zone
+        data_type: varchar
+        description: "Zone name where the trip started."
+
+      - name: dropoff_location_id
+        data_type: integer
+        description: "ID for the dropoff location."
+
+      - name: dropoff_borough
+        data_type: varchar
+        description: "Borough name where the trip ended."
+
+      - name: dropoff_zone
+        data_type: varchar
+        description: "Zone name where the trip ended."
+
+      - name: pickup_datetime
+        data_type: timestamp
+        description: "The exact date and time the trip began."
+
+      - name: dropoff_datetime
+        data_type: timestamp
+        description: "The exact date and time the trip ended."
+
+      - name: store_and_fwd_flag
+        data_type: varchar
+        description: "Indicates if the trip was stored in memory before transmission."
+
+      - name: passenger_count
+        data_type: integer
+        description: "Number of passengers as reported by the driver."
+
+      - name: trip_distance
+        data_type: decimal(18,3)
+        description: "Distance in miles recorded by the meter."
+
+      - name: trip_type
+        data_type: integer
+        description: "1= Street-hail, 2= Dispatch."
+
+      - name: trip_duration_minutes
+        data_type: bigint
+        description: "Calculated time difference between pickup and dropoff in minutes."
+
+      - name: fare_amount
+        data_type: decimal(18,3)
+        description: "Metered fare based on time/distance."
+
+      - name: extra
+        data_type: decimal(18,3)
+        description: "Additional surcharges."
+
+      - name: mta_tax
+        data_type: decimal(18,3)
+        description: "$0.50 MTA tax."
+
+      - name: tip_amount
+        data_type: decimal(18,3)
+        description: "Recorded tip amount."
+
+      - name: tolls_amount
+        data_type: decimal(18,3)
+        description: "Tolls paid during the trip."
+
+      - name: ehail_fee
+        data_type: decimal(18,3)
+        description: "Associated e-hail fee."
+
+      - name: improvement_surcharge
+        data_type: decimal(18,3)
+        description: "Standard $0.30 improvement surcharge."
+
+      - name: total_amount
+        data_type: decimal(18,3)
+        description: "The final cost charged to the passenger."
+
+      - name: payment_type
+        data_type: integer
+        description: "Numeric code signifying the payment method."
+
+      - name: payment_type_description
+        data_type: varchar
+        description: "Descriptive name for the payment method (e.g., 'Credit card', 'Cash')."
