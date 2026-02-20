@@ -1,0 +1,184 @@
+version: 2
+
+models:
+  - name: stg_green_tripdata
+    description: ""
+    columns:
+      - name: vendor_id
+        data_type: integer
+        description: ""
+
+      - name: rate_code_id
+        data_type: integer
+        description: ""
+
+      - name: pickup_location_id
+        data_type: integer
+        description: ""
+
+      - name: dropoff_location_id
+        data_type: integer
+        description: ""
+
+      - name: pickup_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: dropoff_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: store_and_fwd_flag
+        data_type: varchar
+        description: ""
+
+      - name: passenger_count
+        data_type: integer
+        description: ""
+
+      - name: trip_distance
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: trip_type
+        data_type: integer
+        description: ""
+
+      - name: fare_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: extra
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: mta_tax
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: tip_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: tolls_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: ehail_fee
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: improvement_surcharge
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: total_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: payment_type
+        data_type: integer
+        description: ""
+
+  - name: stg_yellow_tripdata
+    description: ""
+    columns:
+      - name: vendor_id
+        data_type: integer
+        description: ""
+
+      - name: rate_code_id
+        data_type: integer
+        description: ""
+
+      - name: pickup_location_id
+        data_type: integer
+        description: ""
+
+      - name: dropoff_location_id
+        data_type: integer
+        description: ""
+
+      - name: pickup_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: dropoff_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: store_and_fwd_flag
+        data_type: varchar
+        description: ""
+
+      - name: passenger_count
+        data_type: integer
+        description: ""
+
+      - name: trip_distance
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: fare_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: extra
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: mta_tax
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: tip_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: tolls_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: improvement_surcharge
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: total_amount
+        data_type: decimal(18,3)
+        description: ""
+
+      - name: payment_type
+        data_type: integer
+        description: ""
+
+  - name: stg_fhv_tripdata
+    description: ""
+    columns:
+      - name: dispatching_base_num
+        data_type: varchar
+        description: ""
+
+      - name: pickup_location_id
+        data_type: integer
+        description: ""
+
+      - name: dropoff_location_id
+        data_type: integer
+        description: ""
+
+      - name: pickup_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: dropoff_datetime
+        data_type: timestamp
+        description: ""
+
+      - name: sr_flag
+        data_type: integer
+        description: ""
+
+      - name: affiliated_base_number
+        data_type: varchar
+        description: ""
+
