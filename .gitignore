@@ -261,3 +261,7 @@ __marimo__/
 # Data directory of dbt
 data/
 *.csv
+.bruin.yml
+logs/runs
+logs/*.log
+*.py[cod]
