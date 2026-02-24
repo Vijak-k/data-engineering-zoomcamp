@@ -195,6 +195,7 @@ venv.bak/
 .venv/
 __pycache__/
 *.duckdb
+.db
 
 # Spyder project settings
 .spyderproject
