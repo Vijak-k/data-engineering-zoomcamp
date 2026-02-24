@@ -1,8 +1,4 @@
 pandas==2.2.0
 requests==2.31.0
-pyarrow>=12.0.0
-requests>=2.31.0
-python-dateutil>=2.8.0
-ingestr
-tzdata
-duckdb>=0.9.0
+python-dateutil==2.8.2
+pyarrow==14.0.1
