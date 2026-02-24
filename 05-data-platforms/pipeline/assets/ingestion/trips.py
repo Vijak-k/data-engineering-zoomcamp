@@ -1,72 +1,111 @@
 """@bruin
-
-# TODO: Set the asset name (recommended pattern: schema.asset_name).
-# - Convention in this module: use an `ingestion.` schema for raw ingestion tables.
-name: TODO_SET_ASSET_NAME
-
-# TODO: Set the asset type.
-# Docs: https://getbruin.com/docs/bruin/assets/python
+name: ingestion.trips
 type: python
-
-# TODO: Pick a Python image version (Bruin runs Python in isolated environments).
-# Example: python:3.11
-image: TODO_SET_PYTHON_IMAGE
-
-# TODO: Set the connection.
+image: python:3.11
 connection: duckdb-default
-
-# TODO: Choose materialization (optional, but recommended).
-# Bruin feature: Python materialization lets you return a DataFrame (or list[dict]) and Bruin loads it into your destination.
-# This is usually the easiest way to build ingestion assets in Bruin.
-# Alternative (advanced): you can skip Bruin Python materialization and write a "plain" Python asset that manually writes
-# into DuckDB (or another destination) using your own client library and SQL. In that case:
-# - you typically omit the `materialization:` block
-# - you do NOT need a `materialize()` function; you just run Python code
-# Docs: https://getbruin.com/docs/bruin/assets/python#materialization
 materialization:
-  # TODO: choose `table` or `view` (ingestion generally should be a table)
   type: table
-  # TODO: pick a strategy.
-  # suggested strategy: append
-  strategy: TODO
-
-# TODO: Define output columns (names + types) for metadata, lineage, and quality checks.
-# Tip: mark stable identifiers as `primary_key: true` if you plan to use `merge` later.
-# Docs: https://getbruin.com/docs/bruin/assets/columns
-columns:
-  - name: TODO_col1
-    type: TODO_type
-    description: TODO
-
+  strategy: append
 @bruin"""
 
-# TODO: Add imports needed for your ingestion (e.g., pandas, requests).
-# - Put dependencies in the nearest `requirements.txt` (this template has one at the pipeline root).
-# Docs: https://getbruin.com/docs/bruin/assets/python
+import os
+import json
+from datetime import datetime
+from io import BytesIO
+from typing import List, Dict
 
+import pandas as pd
+import requests
 
-# TODO: Only implement `materialize()` if you are using Bruin Python materialization.
-# If you choose the manual-write approach (no `materialization:` block), remove this function and implement ingestion
-# as a standard Python script instead.
+def get_date_range() -> tuple[str, str]:
+    start_date = os.getenv('BRUIN_START_DATE')
+    end_date = os.getenv('BRUIN_END_DATE')
+    if not start_date or not end_date:
+        raise ValueError("BRUIN_START_DATE and BRUIN_END_DATE must be set")
+    return start_date, end_date
+
+def get_pipeline_variables() -> Dict:
+    bruin_vars = os.getenv('BRUIN_VARS', '{}')
+    return json.loads(bruin_vars)
+
+def generate_download_tasks(start_date: str, end_date: str, taxi_types: List[str]) -> List[Dict]:
+    from dateutil.rrule import rrule, MONTHLY
+    start = datetime.strptime(start_date[:10], '%Y-%m-%d')
+    end = datetime.strptime(end_date[:10], '%Y-%m-%d')
+    tasks = []
+    for dt in rrule(MONTHLY, dtstart=start, until=end):
+        for taxi_type in taxi_types:
+            tasks.append({
+                'year': dt.year,
+                'month': dt.month,
+                'taxi_type': taxi_type,
+                'date_key': dt.strftime('%Y-%m')
+            })
+    return tasks
+
+def download_nyc_taxi_data(year: int, month: int, taxi_type: str) -> pd.DataFrame:
+    base_url = "https://d37ci6vzurychx.cloudfront.net/trip-data"
+    filename = f"{taxi_type}_tripdata_{year}-{month:02d}.parquet"
+    url = f"{base_url}/{filename}"
+    print(f"Downloading: {filename}")
+    try:
+        response = requests.get(url, timeout=300)
+        response.raise_for_status()
+        df = pd.read_parquet(BytesIO(response.content))
+        print(f"  [OK] Downloaded {len(df):,} records")
+        return df
+    except Exception as e:
+        print(f"  [X] Error downloading {filename}: {e}")
+        return pd.DataFrame()
+
 def materialize():
-    """
-    TODO: Implement ingestion using Bruin runtime context.
+    print("=" * 70)
+    print("NYC Taxi Data Ingestion (Windows Compatibility Mode)")
+    print("=" * 70)
+    
+    start_date, end_date = get_date_range()
+    pipeline_vars = get_pipeline_variables()
+    taxi_types = pipeline_vars.get('taxi_types', ['yellow'])
+    
+    tasks = generate_download_tasks(start_date, end_date, taxi_types)
+    dataframes = []
+    
+    for task in tasks:
+        df = download_nyc_taxi_data(task['year'], task['month'], task['taxi_type'])
+        if not df.empty:
+            # Add basic metadata
+            df['extracted_at'] = datetime.now()
+            dataframes.append(df)
+    
+    if not dataframes:
+        return pd.DataFrame()
 
-    Required Bruin concepts to use here:
-    - Built-in date window variables:
-      - BRUIN_START_DATE / BRUIN_END_DATE (YYYY-MM-DD)
-      - BRUIN_START_DATETIME / BRUIN_END_DATETIME (ISO datetime)
-      Docs: https://getbruin.com/docs/bruin/assets/python#environment-variables
-    - Pipeline variables:
-      - Read JSON from BRUIN_VARS, e.g. `taxi_types`
-      Docs: https://getbruin.com/docs/bruin/getting-started/pipeline-variables
+    final_df = pd.concat(dataframes, ignore_index=True)
 
-    Design TODOs (keep logic minimal, focus on architecture):
-    - Use start/end dates + `taxi_types` to generate a list of source endpoints for the run window.
-    - Fetch data for each endpoint, parse into DataFrames, and concatenate.
-    - Add a column like `extracted_at` for lineage/debugging (timestamp of extraction).
-    - Prefer append-only in ingestion; handle duplicates in staging.
-    """
-    # return final_dataframe
+    # --- THE "STRING FIRST" STRATEGY ---
+    # Convert all datetime columns to strings. 
+    # This prevents PyArrow from looking for a timezone database.
+    # DuckDB will automatically parse these strings back into dates upon ingestion.
+    for col in final_df.columns:
+        if pd.api.types.is_datetime64_any_dtype(final_df[col]):
+            print(f"  [Fix] Converting {col} to string for safe transit")
+            final_df[col] = final_df[col].astype(str)
+    # -----------------------------------
+
+    return final_df
 
 
+# This block is for local testing only - Bruin will call materialize() directly
+if __name__ == "__main__":
+    # Set test environment variables
+    os.environ['BRUIN_START_DATE'] = '2024-01-01'
+    os.environ['BRUIN_END_DATE'] = '2024-01-31'
+    os.environ['BRUIN_VARS'] = json.dumps({'taxi_types': ['yellow']})
+    
+    # Run materialize
+    result = materialize()
+    print("\nTest run completed!")
+    print(f"Shape: {result.shape}")
+    if not result.empty:
+        print("\nFirst few rows:")
+        print(result.head())
