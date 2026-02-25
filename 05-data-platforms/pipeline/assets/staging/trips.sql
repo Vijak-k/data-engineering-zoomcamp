@@ -5,6 +5,7 @@ type: duckdb.sql
 
 materialization:
   type: table
+  strategy: create+replace
 
 depends:
   - ingestion.raw_trips
@@ -15,7 +16,7 @@ custom_checks:
   - name: all_rows_unique
     description: Ensures that each row is unique based on the primary key columns (pickup_time, dropoff_time, pickup_location_id, dropoff_location_id, taxi_type)
     value: 0
-    query: |
+    query: |-
       SELECT COUNT(*)
       FROM (
         SELECT
@@ -163,11 +164,3 @@ SELECT
   extracted_at,
   CAST(CURRENT_TIMESTAMP AS TIMESTAMP) AS updated_at,
 FROM enriched_trips
-
-
-/*
-SELECT *
-FROM ingestion.trips
-WHERE pickup_datetime >= '{{ start_datetime }}'
-  AND pickup_datetime < '{{ end_datetime }}'
-*/
