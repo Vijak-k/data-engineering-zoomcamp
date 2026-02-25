@@ -112,7 +112,7 @@ enriched_trips AS (
     ON nt.pickup_location_id = zp.location_id
   -- joining dropoff location
   LEFT JOIN ingestion.taxi_zone_lookup zd
-    ON nt.pickup_location_id = zd.location_id
+    ON nt.dropoff_location_id = zd.location_id
   LEFT JOIN ingestion.payment_lookup pl
     ON nt.payment_type = pl.payment_type_id
   
