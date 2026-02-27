@@ -269,4 +269,4 @@ logs/*.log
 
 # Gemini CLI
 .gemini/
-GEMINI.mkdocs
+GEMINI.md
