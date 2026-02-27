@@ -1,13 +1,16 @@
 [project]
-name = "zoomcamp-workshop-prep"
+name = "04-analytics-engineering"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "dbt-duckdb>=1.10.0",
+    "duckdb>=1.4.4",
     "altair>=6.0.0",
-    "dlt[workspace]>=1.21.0",
+    "dlt[duckdb,workspace]>=1.21.0",
     "ibis-framework[duckdb]>=12.0.0",
     "jupyterlab>=4.5.4",
     "marimo>=0.19.9",
+    "dbt-core>=1.11.6",
 ]
