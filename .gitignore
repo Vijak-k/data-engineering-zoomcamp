@@ -266,7 +266,3 @@ data/
 logs/runs
 logs/*.log
 *.py[cod]
-
-# Gemini CLI
-.gemini/
-GEMINI.md
