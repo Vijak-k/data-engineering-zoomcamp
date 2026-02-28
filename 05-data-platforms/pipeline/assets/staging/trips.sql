@@ -48,8 +48,8 @@ WITH normalized_trips AS (
     vendorid AS vendor_id,
     ratecodeid AS rate_code_id, -- Note: Check if your ingestion standardized this name!
     -- pickup and dropoff information
-    CAST(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) AS TIMESTAMP) AS pickup_time,
-    CAST(COALESCE(tpep_dropoff_datetime, lpep_dropoff_datetime) AS TIMESTAMP) AS dropoff_time,
+    CAST(NULLIF(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime), 'NaT') AS TIMESTAMP) AS pickup_time,
+    CAST(NULLIF(COALESCE(tpep_dropoff_datetime, lpep_dropoff_datetime), 'NaT') AS TIMESTAMP) AS dropoff_time,
     pulocationid as pickup_location_id,
     dolocationid as dropoff_location_id,
     -- trip information
@@ -67,13 +67,14 @@ WITH normalized_trips AS (
     payment_type,
     -- table information
     taxi_type,
-    CAST(extracted_at AS TIMESTAMP) AS extracted_at
+    CAST(NULLIF(extracted_at, 'NaT') AS TIMESTAMP) AS extracted_at
   FROM ingestion.raw_trips
   -- THE CRITICAL FILTER:
   WHERE 1=1
-    AND CAST(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) AS TIMESTAMP) >= '{{ start_datetime }}'
-    AND CAST(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) AS TIMESTAMP) <  '{{ end_datetime }}'
+    AND CAST(NULLIF(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime), 'NaT') AS TIMESTAMP) >= '{{ start_datetime }}'
+    AND CAST(NULLIF(COALESCE(tpep_pickup_datetime, lpep_pickup_datetime), 'NaT') AS TIMESTAMP) <  '{{ end_datetime }}'
     AND COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) IS NOT NULL
+    AND COALESCE(tpep_pickup_datetime, lpep_pickup_datetime) != 'NaT'
     AND COALESCE(tpep_dropoff_datetime, lpep_dropoff_datetime) IS NOT NULL
     AND pulocationid IS NOT NULL
     AND dolocationid IS NOT NULL
