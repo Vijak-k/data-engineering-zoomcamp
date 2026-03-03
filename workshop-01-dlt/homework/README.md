@@ -1,6 +1,6 @@
 # Homework 6: Ingestion with dlt
 
-This folder contain [ingestion pipeline](https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/workshop-01-dlt/homework/taxi-pipeline/taxi_pipeline.py) and answer to homework in the workshop [From APIs to Warehouses: AI-Assisted Data Ingestion with dlt](https://www.youtube.com/embed/5eMytPBgmVs?si=CE-RlumCejgWPRDi).
+This folder contain [ingestion pipeline](https://github.com/Vijak-k/data-engineering-zoomcamp/tree/main/workshop-01-dlt/homework/taxi-pipeline) and answer to homework in the workshop [From APIs to Warehouses: AI-Assisted Data Ingestion with dlt](https://www.youtube.com/embed/5eMytPBgmVs?si=CE-RlumCejgWPRDi).
 
 
 
