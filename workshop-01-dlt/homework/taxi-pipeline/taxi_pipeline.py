@@ -32,7 +32,7 @@ def taxi_pipeline_rest_api_source():
 
 
 pipeline = dlt.pipeline(
-    pipeline_name='taxi_pipeline_pipeline',
+    pipeline_name='taxi_pipeline',
     destination='duckdb',
     dataset_name="taxi_data",
     # `refresh="drop_sources"` ensures the data and the state is cleaned
