@@ -1,5 +1,9 @@
 # Homework 6: Ingestion with dlt
 
+This folder contain [ingestion pipeline](https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/workshop-01-dlt/homework/taxi-pipeline/taxi_pipeline.py) and answer to homework in the workshop "From APIs to Warehouses: AI-Assisted Data Ingestion with dlt".
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/5eMytPBgmVs?si=CE-RlumCejgWPRDi" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Question 1: What is the start date and end date of the dataset?
 
 💡Ans: 2009-06-01 to 2009-07-01
