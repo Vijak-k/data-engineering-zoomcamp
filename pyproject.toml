@@ -15,4 +15,5 @@ dependencies = [
     "graphviz>=0.21",
     "dlt[duckdb,workspace]>=1.22.1",
     "ipykernel>=7.2.0",
+    "pyspark>=4.1.1",
 ]
