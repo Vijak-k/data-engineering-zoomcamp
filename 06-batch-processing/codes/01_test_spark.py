@@ -11,4 +11,4 @@ print(f"Spark version: {spark.version}")
 df = spark.range(10)
 df.show()
 
-spark.stop();
+spark.stop()
