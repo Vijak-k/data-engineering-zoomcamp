@@ -46,11 +46,3 @@ Each file in the `codes/` directory focuses on a specific aspect of Spark's func
 1. **Environment**: Ensure you have Spark and PySpark installed (this project uses `pyspark` via `uv`).
 2. **Download Data**: Use `bash download_data.sh yellow 2021` to fetch raw datasets.
 3. **Execution**: Run the notebooks sequentially to understand the flow from ingestion to complex analytics.
-
----
-
-### Quick Fixes Applied:
-
-* **Removed Line Numbers:** Cleaned the `1`, `2`, `3` markers from the start of lines.
-* **Fixed Bullet Points:** Changed the numbered list in the directory section to bullet points for better scannability.
-* **Standardized Headers:** Ensured the hierarchy (H1, H2, H3) is consistent so your GitHub table of contents works correctly.
