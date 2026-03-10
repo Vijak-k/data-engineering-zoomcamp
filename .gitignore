@@ -267,3 +267,9 @@ logs/runs
 logs/*.log
 *.py[cod]
 logs/queries
+
+# Spark / Batch Processing data and temporary files
+06-batch-processing/codes/fhvhv/
+06-batch-processing/codes/spark-warehouse/
+06-batch-processing/codes/zones/
+06-batch-processing/codes/tmp/
