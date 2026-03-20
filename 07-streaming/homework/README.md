@@ -102,7 +102,7 @@ How long did it take to send the data?
 
 💡Ans: 10 seconds
 
-Actually, I've got 15.28 seconds
+Actually, I've got 15.28 seconds see https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/homework/notebooks/hw-producer.ipynb
 
 ## Question 3. Consumer - trip distance
 
@@ -114,9 +114,10 @@ Count how many trips have a `trip_distance` greater than 5.0 kilometers.
 How many trips have `trip_distance` > 5?
 
 💡Ans:  8506
-
+Note book for this question: https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/homework/notebooks/hw-consumer.ipynb
 
 ## Part 2: PyFlink (Questions 4-6)
+Producer : https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/src/producers/producer_hw.py
 
 ## Question 4. Tumbling window - pickup location
 
@@ -139,6 +140,7 @@ Which `PULocationID` had the most trips in a single 5-minute window?
 
 💡Ans: 74
 
+Job file for this question: https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/src/job/hw_q4_job.py
 
 ## Question 5. Session window - longest streak
 
@@ -156,6 +158,15 @@ How many trips were in the longest session?
 
 💡Ans: 81
 
+Job file: https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/src/job/hw_q5_job.py
+
+SQL for result
+```
+SELECT num_trips
+FROM green_taxi_session_stats
+ORDER BY num_trips DESC
+LIMIT 1;
+```
 
 
 ## Question 6. Tumbling window - largest tip
@@ -165,10 +176,17 @@ total `tip_amount` per hour (across all locations).
 
 Which hour had the highest total tip amount?
 
-- 2025-10-01 18:00:00
-- 2025-10-16 18:00:00
-- 2025-10-22 08:00:00
-- 2025-10-30 16:00:00
+💡Ans: 2025-10-16 18:00:00
+
+Job file: https://github.com/Vijak-k/data-engineering-zoomcamp/blob/main/07-streaming/src/job/hw_q6_job.py
+
+SQL for result
+```
+SELECT window_start, window_end, total_tip
+FROM green_taxi_tips_hourly
+ORDER BY total_tip DESC
+LIMIT 3;
+```
 
 
 ## Submitting the solutions
