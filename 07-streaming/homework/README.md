@@ -85,8 +85,12 @@ Measure the time it takes to send the entire dataset and flush:
 from time import time
 
 t0 = time()
-
-# send all rows ...
+topic_name = 'green-trips'
+for _, row in df.iterrows():
+    ride = ride_from_row(row)
+    producer.send(topic_name, value=ride)
+    print(f"Sent: {ride}")
+    time.sleep(0.01)
 
 producer.flush()
 
@@ -98,7 +102,7 @@ How long did it take to send the data?
 
 💡Ans: 10 seconds
 
-Actually, I've got 8.79 seconds
+Actually, I've got 15.28 seconds
 
 ## Question 3. Consumer - trip distance
 
@@ -109,48 +113,10 @@ Count how many trips have a `trip_distance` greater than 5.0 kilometers.
 
 How many trips have `trip_distance` > 5?
 
-- 6506
-- 7506
-- 8506
-- 9506
+💡Ans:  8506
 
 
 ## Part 2: PyFlink (Questions 4-6)
-
-For the PyFlink questions, you'll adapt the workshop code to work with
-the green taxi data. The key differences from the workshop:
-
-- Topic name: `green-trips` (instead of `rides`)
-- Datetime columns use `lpep_` prefix (instead of `tpep_`)
-- You'll need to handle timestamps as strings (not epoch milliseconds)
-
-You can convert string timestamps to Flink timestamps in your source DDL:
-
-```sql
-lpep_pickup_datetime VARCHAR,
-event_timestamp AS TO_TIMESTAMP(lpep_pickup_datetime, 'yyyy-MM-dd HH:mm:ss'),
-WATERMARK FOR event_timestamp AS event_timestamp - INTERVAL '5' SECOND
-```
-
-Before running the Flink jobs, create the necessary PostgreSQL tables
-for your results.
-
-Important notes for the Flink jobs:
-
-- Place your job files in `workshop/src/job/` - this directory is
-  mounted into the Flink containers at `/opt/src/job/`
-- Submit jobs with:
-  `docker exec -it workshop-jobmanager-1 flink run -py /opt/src/job/your_job.py`
-- The `green-trips` topic has 1 partition, so set parallelism to 1
-  in your Flink jobs (`env.set_parallelism(1)`). With higher parallelism,
-  idle consumer subtasks prevent the watermark from advancing.
-- Flink streaming jobs run continuously. Let the job run for a minute
-  or two until results appear in PostgreSQL, then query the results.
-  You can cancel the job from the Flink UI at http://localhost:8081
-- If you sent data to the topic multiple times, delete and recreate
-  the topic to avoid duplicates:
-  `docker exec -it workshop-redpanda-1 rpk topic delete green-trips`
-
 
 ## Question 4. Tumbling window - pickup location
 
@@ -171,10 +137,7 @@ LIMIT 3;
 
 Which `PULocationID` had the most trips in a single 5-minute window?
 
-- 42
-- 74
-- 75
-- 166
+💡Ans: 74
 
 
 ## Question 5. Session window - longest streak
@@ -191,10 +154,8 @@ with the longest session (most trips in a single session).
 
 How many trips were in the longest session?
 
-- 12
-- 31
-- 51
-- 81
+💡Ans: 81
+
 
 
 ## Question 6. Tumbling window - largest tip
